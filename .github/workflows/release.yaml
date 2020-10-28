@@ -23,11 +23,7 @@ jobs:
 
       - name: SHA
         run: |
-          ASSET_URL=$(curl -s \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/dapr-templates/daprme/releases/tags/${GITHUB_REF:10}" \
-            | jq '.assets[] | select(.name=="daprme") | .url')
+          ASSET_URL=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/dapr-templates/daprme/releases/tags/${GITHUB_REF:10}" | jq '.assets[] | select(.name=="daprme") | .url')
           ASSET_SHA=$(curl -L -f -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $ASSET_URL 2> \
             /dev/null | shasum -a 256 | sed -n 's/\(.*\) -/\1/p' | xargs -I {} echo {} )
           echo "ASSET_SHA=${ASSET_SHA}" >> $GITHUB_ENV
