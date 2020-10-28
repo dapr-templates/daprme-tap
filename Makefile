@@ -1,4 +1,4 @@
-RELEASE_TAG  =v0.7.0
+RELEASE_TAG  =v0.6.1
 
 all: help
 
