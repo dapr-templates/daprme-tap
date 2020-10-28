@@ -21,23 +21,26 @@ jobs:
         run: |
           sudo apt-get install -y jq
 
+      - name: Set env
+        run: echo "RELEASE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
       - name: SHA
         run: |
-          ASSET_URL=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/dapr-templates/daprme/releases/tags/${GITHUB_REF:10}" | jq '.assets[] | select(.name=="daprme") | .url')
+          ASSET_URL=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/dapr-templates/daprme/releases/tags/${RELEASE_TAG}" | jq '.assets[] | select(.name=="daprme") | .url')
           ASSET_SHA=$(curl -L -f -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $ASSET_URL 2> \
             /dev/null | shasum -a 256 | sed -n 's/\(.*\) -/\1/p' | xargs -I {} echo {} )
           echo "ASSET_SHA=${ASSET_SHA}" >> $GITHUB_ENV
 
       - name: Formula
         run: |
-          sed -e "s/TAGVALUE/${GITHUB_REF:10}/g" -e "s/SHAVALUE/${ASSET_SHA}/g" daprme.tmpl > daprme-test.rb
+          sed -e "s/TAGVALUE/${RELEASE_TAG}/g" -e "s/SHAVALUE/${ASSET_SHA}/g" daprme.tmpl > daprme-test.rb
 
       - name: Commit
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add daprme.rb
-          git commit -m "formula ${GITHUB_REF:10}"
+          git commit -m "formula ${RELEASE_TAG}"
 
       - name: Push
         uses: ad-m/github-push-action@master
