@@ -39,7 +39,7 @@ jobs:
           git commit -m "formula ${GITHUB_REF:10}"
 
       - name: Push
-        uses: dapr-templates/daprme@master
+        uses: dapr-templates/daprme@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
