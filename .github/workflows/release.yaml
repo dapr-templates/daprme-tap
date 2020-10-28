@@ -43,5 +43,5 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git commit -m "formula ${RELEASE_TAG}"
-          git push "https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/dapr-templates/homebrew-daprme.git"
+          git push "https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/dapr-templates/homebrew-daprme.git" HEAD:master
           echo "DONE"
