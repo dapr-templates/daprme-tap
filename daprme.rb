@@ -1,24 +1,15 @@
-class DaprMe < Formula
-    desc "New app wizard for creation of a new Dapr project."
-    homepage "https://dapr.io"
-    version '0.5.1'
-    url "https://github.com/dapr-templates/daprme/archive/v0.5.1.tar.gz"
-    sha256 "6afb2fb15541ecaed71243851c3ed4419db1135bed68fb47705da929a27c1f5b"
-  
-    depends_on "go" => :build
-  
-    bottle do
-      root_url "https://github.com/dapr-templates/daprme-tap/releases/download/v0.5.1"
-      cellar :any_skip_relocation
-      sha256 "6db2f36609f71c21e788c9001728c048240addd598e68b341e311ebf795335c6" => :catalina
-    end
-  
-    def install
-      system "go", "build", "-ldflags", "-X main.version=#{version} -X main.apiVersion=1.0", "-o", "./cli"
-      bin.install "cli" => "dapr"
-    end
-  
-    test do
-      system "#{bin}/dapr", "--version"
-    end
+class Daprme < Formula
+  desc "New app wizard for creation of a new Dapr project"
+  homepage "https://dapr.io"
+  url "https://github.com/dapr-templates/daprme/releases/download/v0.6.1/daprme"
+  sha256 "03493a00a6ca29b60cd03be415858da8dcc00c5567d9f89c6c666716f4ae20f4"
+  license "MIT"
+
+  def install
+    bin.install "daprme" => "daprme"
+  end
+
+  test do
+    system "#{bin}/daprme", "--version"
+  end
 end
