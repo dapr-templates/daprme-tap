@@ -1,4 +1,4 @@
-RELEASE_TAG  =release-daprme-v0.6.5
+RELEASE_TAG  =release-daprme-v0.6.6
 
 
 all: help
