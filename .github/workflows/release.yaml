@@ -13,9 +13,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          persist-credentials: false 
-          fetch-depth: 1
 
       - name: Commit
         run: |
@@ -46,10 +43,5 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git commit -m "formula ${RELEASE_TAG}"
-
-      - name: Push
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-          
+          git push "https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/dapr-templates/homebrew-daprme.git"
+          echo "DONE"
