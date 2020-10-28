@@ -1,0 +1,50 @@
+name: daprme formula on tag
+
+on:
+  push:
+    tags:
+      - 'release-daprme-v*' # release-daprme-v0.8.1
+
+env:
+  GITHUB_TOKEN: ${{ secrets.DAPR_BOT_TOKEN }}
+  REPO_TAG: ${GITHUB_REF:10}
+  
+jobs:
+
+  update:
+    name: Formula
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false 
+          fetch-depth: 0 
+
+      - name: Get SHA
+        run: |
+          ASSET_URL=$(curl -s \
+             -H "Authorization: token ${GITHUB_TOKEN}" \
+             -H "Accept: application/vnd.github.v3+json" \
+             "https://api.github.com/repos/dapr-templates/daprme/releases/tags/${REPO_TAG}" \
+             | jq '.assets[] | select(.name=="daprme") | .url')
+          ASSET_SHA=$(curl -L -f -H "Authorization: token ${GITHUB_TOKEN}" $ASSET_URL 2> \
+            /dev/null | shasum -a 256 | sed -n 's/\(.*\) -/\1/p' | xargs -I {} echo {} )
+          echo "ASSET_SHA=${ASSET_SHA}" >> $GITHUB_ENV
+
+      - name: Generate Formula
+        run: |
+          sed -e "s/TAGVALUE/${REPO_TAG}/g" -e "s/SHAVALUE/${ASSET_SHA}/g" daprme.tmpl > daprme-test.rb
+
+      - name: Commit Formula
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add daprme.rb
+          git commit -m "formula ${REPO_TAG}"
+
+      - name: Push Formula
+        uses: dapr-templates/daprme@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          
