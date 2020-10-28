@@ -45,5 +45,5 @@ jobs:
           git checkout master
           git add .
           git commit -m "formula ${RELEASE_TAG}"
-          git push origin master
+          git push
           echo "DONE"
