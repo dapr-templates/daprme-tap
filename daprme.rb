@@ -1,8 +1,8 @@
 class Daprme < Formula
   desc "New app wizard for creation of a new Dapr project"
   homepage "https://dapr.io"
-  url "https://github.com/dapr-templates/daprme/releases/download/v0.6.1/daprme"
-  sha256 "03493a00a6ca29b60cd03be415858da8dcc00c5567d9f89c6c666716f4ae20f4"
+  url "https://github.com/dapr-templates/daprme/releases/download/v0.6.2/daprme"
+  sha256 "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 "
   license "MIT"
 
   def install
